@@ -766,11 +766,14 @@ body {
     z-index: 30;
     pointer-events: none;
     transition: all 0.5s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .biz-logo {
-    width: 200px;
-    /* Ajuste conforme necessário */
+    width: 140px;
+    /* Reduzido um pouco para caberem dois lado a lado */
     height: auto;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
     opacity: 0.9;
