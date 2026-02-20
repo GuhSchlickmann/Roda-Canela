@@ -1,0 +1,6 @@
+node_modules/
+feedbacks.db
+*.log
+.env
+.vercel
+.env*.local

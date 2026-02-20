@@ -1,0 +1,227 @@
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static('.')); // Servir arquivos estáticos (HTML, CSS, JS)
+
+// ============================================
+// CONFIGURAÇÃO DO BANCO DE DADOS
+// ============================================
+
+const db = new sqlite3.Database('./feedbacks.db', (err) => {
+    if (err) {
+        console.error('❌ Erro ao conectar ao banco de dados:', err);
+    } else {
+        console.log('✅ Conectado ao banco de dados SQLite');
+        initDatabase();
+    }
+});
+
+// Criar tabela se não existir
+function initDatabase() {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS feedbacks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            rating INTEGER NOT NULL,
+            name TEXT,
+            email TEXT,
+            feedback TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            ip_address TEXT,
+            user_agent TEXT
+        )
+    `, (err) => {
+        if (err) {
+            console.error('❌ Erro ao criar tabela:', err);
+        } else {
+            console.log('✅ Tabela "feedbacks" pronta');
+        }
+    });
+}
+
+// ============================================
+// ROTAS DA API
+// ============================================
+
+// Rota para receber feedback
+app.post('/api/feedback', (req, res) => {
+    const { rating, name, email, feedback } = req.body;
+
+    // Validação básica
+    if (!rating || !feedback) {
+        return res.status(400).json({
+            success: false,
+            message: 'Rating e feedback são obrigatórios'
+        });
+    }
+
+    if (rating < 1 || rating > 5) {
+        return res.status(400).json({
+            success: false,
+            message: 'Rating deve ser entre 1 e 5'
+        });
+    }
+
+    // Capturar informações adicionais
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('user-agent');
+
+    // Inserir no banco de dados
+    const sql = `
+        INSERT INTO feedbacks (rating, name, email, feedback, ip_address, user_agent)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.run(sql, [rating, name, email, feedback, ipAddress, userAgent], function (err) {
+        if (err) {
+            console.error('❌ Erro ao salvar feedback:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro ao salvar feedback'
+            });
+        }
+
+        console.log(`✅ Novo feedback recebido! ID: ${this.lastID}, Rating: ${rating} estrelas`);
+
+        res.json({
+            success: true,
+            message: 'Feedback recebido com sucesso!',
+            id: this.lastID
+        });
+    });
+});
+
+// Rota para listar todos os feedbacks (admin)
+app.get('/api/feedbacks', (req, res) => {
+    const sql = `
+        SELECT * FROM feedbacks 
+        ORDER BY created_at DESC
+    `;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error('❌ Erro ao buscar feedbacks:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro ao buscar feedbacks'
+            });
+        }
+
+        res.json({
+            success: true,
+            count: rows.length,
+            feedbacks: rows
+        });
+    });
+});
+
+// Rota para estatísticas
+app.get('/api/stats', (req, res) => {
+    const sql = `
+        SELECT 
+            COUNT(*) as total,
+            AVG(rating) as average_rating,
+            SUM(CASE WHEN rating <= 3 THEN 1 ELSE 0 END) as negative_count,
+            SUM(CASE WHEN rating >= 4 THEN 1 ELSE 0 END) as positive_count,
+            SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as rating_1,
+            SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as rating_2,
+            SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as rating_3,
+            SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as rating_4,
+            SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as rating_5
+        FROM feedbacks
+    `;
+
+    db.get(sql, [], (err, row) => {
+        if (err) {
+            console.error('❌ Erro ao buscar estatísticas:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro ao buscar estatísticas'
+            });
+        }
+
+        res.json({
+            success: true,
+            stats: {
+                total: row.total,
+                averageRating: parseFloat(row.average_rating).toFixed(2),
+                negative: row.negative_count,
+                positive: row.positive_count,
+                breakdown: {
+                    1: row.rating_1,
+                    2: row.rating_2,
+                    3: row.rating_3,
+                    4: row.rating_4,
+                    5: row.rating_5
+                }
+            }
+        });
+    });
+});
+
+// Rota para deletar feedback (admin)
+app.delete('/api/feedback/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.run('DELETE FROM feedbacks WHERE id = ?', [id], function (err) {
+        if (err) {
+            console.error('❌ Erro ao deletar feedback:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro ao deletar feedback'
+            });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Feedback não encontrado'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Feedback deletado com sucesso'
+        });
+    });
+});
+
+// ============================================
+// INICIAR SERVIDOR
+// ============================================
+
+app.listen(PORT, () => {
+    console.log(`
+╔════════════════════════════════════════╗
+║   🚀 Servidor rodando!                 ║
+║                                        ║
+║   📍 URL: http://localhost:${PORT}       ║
+║   📊 API: http://localhost:${PORT}/api  ║
+║                                        ║
+║   Endpoints disponíveis:               ║
+║   POST   /api/feedback                 ║
+║   GET    /api/feedbacks                ║
+║   GET    /api/stats                    ║
+║   DELETE /api/feedback/:id             ║
+╚════════════════════════════════════════╝
+    `);
+});
+
+// Fechar banco de dados ao encerrar
+process.on('SIGINT', () => {
+    db.close((err) => {
+        if (err) {
+            console.error('❌ Erro ao fechar banco de dados:', err);
+        } else {
+            console.log('✅ Banco de dados fechado');
+        }
+        process.exit(0);
+    });
+});

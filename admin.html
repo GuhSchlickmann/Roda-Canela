@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Feedbacks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .stat-card.positive .value {
+            color: #34A853;
+        }
+
+        .stat-card.negative .value {
+            color: #EA4335;
+        }
+
+        .feedbacks-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedbacks-section h2 {
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            border-color: #4285F4;
+            color: #4285F4;
+        }
+
+        .filter-btn.active {
+            background: #4285F4;
+            color: white;
+            border-color: #4285F4;
+        }
+
+        .feedback-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .feedback-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+
+        .date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .feedback-content {
+            margin-bottom: 10px;
+        }
+
+        .feedback-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .feedback-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .delete-btn {
+            background: #EA4335;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #d33828;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px;
+            color: #6c757d;
+        }
+
+        .rating-breakdown {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .rating-bar {
+            flex: 1;
+            text-align: center;
+        }
+
+        .rating-bar-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .rating-bar-fill {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .rating-bar-value {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            transition: width 0.5s ease;
+        }
+
+        .rating-bar-count {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Painel de Feedbacks</h1>
+
+        <!-- Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total de Avaliações</h3>
+                <div class="value" id="totalCount">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Média Geral</h3>
+                <div class="value" id="averageRating">-</div>
+            </div>
+            <div class="stat-card positive">
+                <h3>Positivas (4-5★)</h3>
+                <div class="value" id="positiveCount">-</div>
+            </div>
+            <div class="stat-card negative">
+                <h3>Negativas (1-3★)</h3>
+                <div class="value" id="negativeCount">-</div>
+            </div>
+        </div>
+
+        <!-- Distribuição por Estrelas -->
+        <div class="feedbacks-section" style="margin-bottom: 20px;">
+            <h2>Distribuição por Estrelas</h2>
+            <div class="rating-breakdown" id="ratingBreakdown"></div>
+        </div>
+
+        <!-- Lista de Feedbacks -->
+        <div class="feedbacks-section">
+            <h2>Feedbacks Recebidos</h2>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterFeedbacks('all')">Todos</button>
+                <button class="filter-btn" onclick="filterFeedbacks('positive')">Positivos</button>
+                <button class="filter-btn" onclick="filterFeedbacks('negative')">Negativos</button>
+                <button class="filter-btn" onclick="filterFeedbacks(5)">5★</button>
+                <button class="filter-btn" onclick="filterFeedbacks(4)">4★</button>
+                <button class="filter-btn" onclick="filterFeedbacks(3)">3★</button>
+                <button class="filter-btn" onclick="filterFeedbacks(2)">2★</button>
+                <button class="filter-btn" onclick="filterFeedbacks(1)">1★</button>
+            </div>
+
+            <div id="feedbacksList">
+                <div class="loading">Carregando feedbacks...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allFeedbacks = [];
+        let currentFilter = 'all';
+
+        // Carregar dados ao iniciar
+        loadStats();
+        loadFeedbacks();
+
+        // Atualizar a cada 30 segundos
+        setInterval(() => {
+            loadStats();
+            loadFeedbacks();
+        }, 30000);
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+
+                if (data.success) {
+                    const stats = data.stats;
+                    document.getElementById('totalCount').textContent = stats.total;
+                    document.getElementById('averageRating').textContent = stats.averageRating + '★';
+                    document.getElementById('positiveCount').textContent = stats.positive;
+                    document.getElementById('negativeCount').textContent = stats.negative;
+
+                    // Renderizar breakdown
+                    renderRatingBreakdown(stats.breakdown, stats.total);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        function renderRatingBreakdown(breakdown, total) {
+            const container = document.getElementById('ratingBreakdown');
+            container.innerHTML = '';
+
+            for (let i = 5; i >= 1; i--) {
+                const count = breakdown[i] || 0;
+                const percentage = total > 0 ? (count / total * 100) : 0;
+
+                const bar = document.createElement('div');
+                bar.className = 'rating-bar';
+                bar.innerHTML = `
+                    <div class="rating-bar-label">${i}★</div>
+                    <div class="rating-bar-fill">
+                        <div class="rating-bar-value" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="rating-bar-count">${count}</div>
+                `;
+                container.appendChild(bar);
+            }
+        }
+
+        async function loadFeedbacks() {
+            try {
+                const response = await fetch('/api/feedbacks');
+                const data = await response.json();
+
+                if (data.success) {
+                    allFeedbacks = data.feedbacks;
+                    renderFeedbacks();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar feedbacks:', error);
+                document.getElementById('feedbacksList').innerHTML =
+                    '<div class="empty">Erro ao carregar feedbacks</div>';
+            }
+        }
+
+        function filterFeedbacks(filter) {
+            currentFilter = filter;
+
+            // Atualizar botões ativos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderFeedbacks();
+        }
+
+        function renderFeedbacks() {
+            const container = document.getElementById('feedbacksList');
+
+            let filtered = allFeedbacks;
+
+            if (currentFilter === 'positive') {
+                filtered = allFeedbacks.filter(f => f.rating >= 4);
+            } else if (currentFilter === 'negative') {
+                filtered = allFeedbacks.filter(f => f.rating <= 3);
+            } else if (typeof currentFilter === 'number') {
+                filtered = allFeedbacks.filter(f => f.rating === currentFilter);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty">Nenhum feedback encontrado</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(feedback => `
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <div class="stars">${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}</div>
+                        <div class="date">${new Date(feedback.created_at).toLocaleString('pt-BR')}</div>
+                    </div>
+                    <div class="feedback-content">
+                        <div class="feedback-text">${feedback.feedback}</div>
+                        <div class="feedback-meta">
+                            ${feedback.name ? `<span>👤 ${feedback.name}</span>` : ''}
+                            ${feedback.email ? `<span>📧 ${feedback.email}</span>` : ''}
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteFeedback(${feedback.id})">🗑️ Deletar</button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteFeedback(id) {
+            if (!confirm('Tem certeza que deseja deletar este feedback?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/feedback/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Feedback deletado com sucesso!');
+                    loadStats();
+                    loadFeedbacks();
+                } else {
+                    alert('Erro ao deletar feedback');
+                }
+            } catch (error) {
+                console.error('Erro ao deletar feedback:', error);
+                alert('Erro ao deletar feedback');
+            }
+        }
+    </script>
+</body>
+
+</html>

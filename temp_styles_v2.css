@@ -1,0 +1,11 @@
+/* Connection Status Updates */
+.connection-status {
+    font-size: 0.7rem;
+    color: #28a745;
+    /* Green */
+    text-align: left;
+    margin-top: 5px;
+    margin-left: 5px;
+    font-weight: 500;
+    opacity: 0.9;
+}

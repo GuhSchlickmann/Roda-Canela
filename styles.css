@@ -1,0 +1,791 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --google-dark-bg: #202124;
+    --google-card-bg: #292a2d;
+    --google-input-bg: #3c4043;
+    --google-border: #5f6368;
+    --google-text: #e8eaed;
+    --google-text-secondary: #9aa0a6;
+    --google-blue: #8ab4f8;
+    --google-star: #9aa0a6;
+    --google-star-active: #fbbc04;
+}
+
+/* Global Layout Overrides for Full Screen Split */
+html,
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent scrolls on main step */
+}
+
+body {
+    align-items: stretch;
+    /* Allow full height */
+    justify-content: stretch;
+}
+
+/* Base Container - Full Screen by default */
+.container {
+    max-width: none;
+    width: 100%;
+    height: 100vh;
+    /* Fixed height */
+    background: var(--google-dark-bg);
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make steps take full height */
+.step {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    /* Force 100vh */
+}
+
+.step.active {
+    display: flex;
+}
+
+/* Step 1 Specific: Full Screen Split Layout */
+#step1 {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+#step1 .review-header {
+    background: transparent;
+    border-bottom: none;
+    z-index: 50;
+    position: absolute;
+    top: 40px;
+    /* Slightly more spacing from top */
+    left: 0;
+    right: 0;
+    padding: 0 24px;
+    text-align: center;
+    pointer-events: none;
+    transition: all 0.8s ease-in-out;
+}
+
+#step1 .review-header .business-name {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 12px 28px;
+    border-radius: 50px;
+    /* Fully rounded */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+    font-weight: 600;
+    /* Medium bold for Google Sans look */
+    color: white;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    letter-spacing: 0.2px;
+    transition: all 0.8s ease-in-out;
+    max-width: 85%;
+    font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+}
+
+/* Smart positioning classes */
+#step1 .review-header.header-left {
+    transform: translateX(-15%);
+}
+
+#step1 .review-header.header-right {
+    transform: translateX(15%);
+}
+
+#step1 .review-header.header-left .business-name,
+#step1 .review-header.header-right .business-name {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+#step1 .review-header * {
+    pointer-events: auto;
+}
+
+#step1 .review-content {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.split-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.split-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Vertical Center */
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+/* Negative Side - Left */
+.split-option.negative {
+    background: linear-gradient(135deg, #ea4335 0%, #b31412 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Positive Side - Right */
+.split-option.positive {
+    background: linear-gradient(135deg, #34a853 0%, #1e8e3e 100%);
+}
+
+.split-option:hover {
+    flex: 1.25;
+    /* More expansion */
+    filter: brightness(1.2);
+}
+
+.split-option:active {
+    filter: brightness(0.9);
+}
+
+/* Selecting State (3s Delay Animation) */
+.split-option.is-selecting {
+    pointer-events: none;
+    z-index: 20;
+    transition: all 0.5s ease-out;
+}
+
+.split-option.is-selecting .icon-wrapper {
+    animation: selecting-pulse 1s ease-in-out infinite;
+    transform: scale(1.2);
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+}
+
+.split-option.not-selected {
+    opacity: 0.3;
+    filter: grayscale(0.8) blur(2px);
+    pointer-events: none;
+    transform: scale(0.9);
+}
+
+@keyframes selecting-pulse {
+    0% {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        transform: scale(1.25);
+        box-shadow: 0 0 60px rgba(255, 255, 255, 0.6);
+    }
+
+    100% {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Base animation for the icons */
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+.icon-wrapper {
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: breathing 4s ease-in-out infinite;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+}
+
+/* Ensure lord-icon is always centered */
+.icon-wrapper lord-icon {
+    display: block;
+}
+
+.split-option:hover .icon-wrapper {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.15) rotate(7deg);
+    animation: none;
+}
+
+.split-text {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+    white-space: nowrap;
+}
+
+.split-option:hover .split-text {
+    transform: translateY(-8px) scale(1.05);
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Card-like styling for other steps (Fixed for full screen override) */
+#step2Negative,
+#step3Positive,
+#step4Thanks {
+    max-width: 600px;
+    margin: 40px auto;
+    background: var(--google-card-bg);
+    border-radius: 8px;
+    height: auto;
+    min-height: auto;
+    flex: none;
+    /* Don't stretch */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+/* Ensure form steps have padding */
+#step2Negative .review-content,
+#step3Positive .review-content,
+#step4Thanks .success-container {
+    padding: 24px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    #step1 .review-header {
+        top: 24px;
+    }
+
+    #step1 .review-header .business-name {
+        padding: 10px 20px;
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .icon-wrapper {
+        width: 105px;
+        height: 105px;
+        margin-bottom: 20px;
+    }
+
+    .icon-wrapper lord-icon {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .split-text {
+        font-size: 14px;
+        padding: 10px 20px;
+        letter-spacing: 0.5px;
+    }
+
+    .biz-logo {
+        width: 150px;
+        /* Reduced for better mobile balance */
+    }
+
+    /* Keep Left/Right Split on Mobile */
+    .split-container {
+        flex-direction: row;
+    }
+
+    /* Adjust Card Steps for Mobile */
+    #step2Negative,
+    #step3Positive,
+    #step4Thanks {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+}
+
+/* Code Cleanup: Removed legacy stars-container styles */
+
+.connection-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    color: rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+}
+
+.business-name {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--google-text);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--google-text);
+}
+
+.profile-subtitle {
+    font-size: 12px;
+    color: var(--google-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.personalize-link {
+    color: var(--google-blue);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    padding: 8px 0;
+}
+
+.personalize-link:hover {
+    text-decoration: underline;
+}
+
+/* Content */
+.review-content {
+    padding: 24px;
+}
+
+/* Legacy estrellas removed for clean code */
+
+/* Form */
+.form-group {
+    margin-bottom: 35px;
+}
+
+.form-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--google-text);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--google-input-bg);
+    border: 1px solid var(--google-border);
+    border-radius: 4px;
+    padding: 12px;
+    color: var(--google-text);
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--google-blue);
+}
+
+.form-textarea::placeholder {
+    color: var(--google-text-secondary);
+}
+
+/* Pill Buttons */
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pill-btn {
+    background: transparent;
+    border: 1px solid var(--google-border);
+    border-radius: 16px;
+    padding: 8px 16px;
+    color: var(--google-text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.pill-btn:hover {
+    background: var(--google-input-bg);
+}
+
+.pill-btn.active {
+    background: var(--google-blue);
+    border-color: var(--google-blue);
+    color: var(--google-dark-bg);
+}
+
+/* Photo Upload Button */
+.photo-upload-btn {
+    width: 100%;
+    background: #3c4043;
+    border: 1px solid var(--google-border);
+    border-radius: 4px;
+    padding: 12px;
+    color: var(--google-blue);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.photo-upload-btn:hover {
+    background: #4a4d51;
+}
+
+/* Photo Preview */
+.photo-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.photo-preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--google-border);
+}
+
+.photo-preview-item img,
+.photo-preview-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.photo-preview-remove:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.photo-preview-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+}
+
+/* Footer Buttons */
+.review-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--google-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn {
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--google-blue);
+}
+
+.btn-cancel:hover {
+    background: rgba(138, 180, 248, 0.08);
+}
+
+.btn-submit {
+    background: var(--google-blue);
+    color: var(--google-dark-bg);
+}
+
+.btn-submit:hover {
+    background: #aecbfa;
+}
+
+.btn-submit:disabled {
+    background: var(--google-input-bg);
+    color: var(--google-text-secondary);
+    cursor: not-allowed;
+}
+
+/* Steps */
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+/* Success Message */
+.success-container {
+    text-align: center;
+    padding: 40px 24px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #34A853 0%, #2d8e47 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.success-title {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--google-text);
+}
+
+.success-subtitle {
+    font-size: 14px;
+    color: var(--google-text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.google-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--google-blue);
+    color: var(--google-dark-bg);
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background 0.2s;
+    margin-bottom: 12px;
+}
+
+.google-review-btn:hover {
+    background: #aecbfa;
+}
+
+.skip-btn {
+    display: block;
+    background: transparent;
+    color: var(--google-blue);
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0 auto;
+}
+
+.skip-btn:hover {
+    text-decoration: underline;
+}
+
+/* Responsive / Mobile Adjustments */
+@media (max-width: 600px) {
+    .container {
+        margin: 0;
+    }
+
+    #step1 .review-header {
+        top: 24px;
+    }
+
+    #step1 .review-header .business-name {
+        padding: 10px 24px;
+        font-size: 13px;
+        line-height: 1.4;
+        max-width: 90%;
+    }
+
+    .icon-wrapper {
+        width: 105px;
+        height: 105px;
+        margin-bottom: 20px;
+    }
+
+    .icon-wrapper lord-icon {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .split-text {
+        font-size: 14px;
+        padding: 10px 20px;
+        letter-spacing: 0.5px;
+    }
+
+    #step2Negative,
+    #step3Positive,
+    #step4Thanks {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+        max-height: 100vh;
+        width: 100%;
+        padding-top: 50px;
+        /* Give some top air */
+        overflow-y: auto;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+}
+
+/* Connection Status - Bottom Left */
+/* Connection Status - Bottom Right of the Card */
+/* Logo Styles */
+.biz-logo-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.biz-logo {
+    width: 200px;
+    /* Ajuste conforme necessário */
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+    opacity: 0.9;
+}
+
+/* Esconder logo quando um lado estiver sendo selecionado (foco) */
+.split-option.is-selecting~.biz-logo-container,
+.split-option.not-selected~.biz-logo-container {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+}
+
+/* Ensure container has relative positioning */
+.review-content {
+    position: relative;
+    padding-bottom: 40px;
+    /* Space for the message */
+}

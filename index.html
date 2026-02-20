@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliar Roda Canela</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PKX1S0C1HM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PKX1S0C1HM');
+    </script>
+    <!-- Lordicon Player -->
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- STEP 1: Rating Selection -->
+        <div class="step active" id="step1">
+            <div class="review-header">
+                <h1 class="business-name" id="businessName">Roda Canela</h1>
+
+            </div>
+
+            <div class="review-content">
+                <div class="split-container">
+                    <div class="split-option negative" id="btnNegative">
+                        <div class="icon-wrapper">
+                            <lord-icon src="wired-outline-1122-thumb-down-hover-down.json" trigger="hover"
+                                colors="primary:#000000,secondary:#000000" style="width:100px;height:100px">
+                            </lord-icon>
+                        </div>
+                        <span class="split-text">Não Gostei</span>
+                    </div>
+                    <div class="split-option positive" id="btnPositive">
+                        <div class="icon-wrapper">
+                            <lord-icon src="wired-outline-1122-thumb-down-hover-up.json" trigger="hover"
+                                colors="primary:#000000,secondary:#000000" style="width:100px;height:100px">
+                            </lord-icon>
+                        </div>
+                        <span class="split-text">Gostei</span>
+                    </div>
+                </div>
+                <div class="biz-logo-container">
+                    <img src="AF_ALLES_compl_COR.png" alt="Roda Canela Logo" class="biz-logo">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- STEP 2: Negative Feedback Form -->
+        <div class="step" id="step2Negative">
+            <form id="negativeForm">
+                <div class="review-content">
+                    <div class="form-group">
+                        <label class="form-label">Conte como foi sua experiência neste lugar</label>
+                        <textarea class="form-textarea" id="negativeFeedback" name="feedback"
+                            placeholder="Compartilhe detalhes sobre sua experiência..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="file" id="photoInput" accept="image/*,video/*" multiple style="display: none;">
+                        <button type="button" class="photo-upload-btn" id="photoUploadBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                            </svg>
+                            Adicionar fotos e vídeos
+                        </button>
+                        <div id="photoPreview" class="photo-preview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Quando você visitou esse lugar?</label>
+                        <div class="pill-group">
+                            <button type="button" class="pill-btn" data-visit="weekday">Dia da semana</button>
+                            <button type="button" class="pill-btn" data-visit="weekend">Fim de semana</button>
+                            <button type="button" class="pill-btn" data-visit="holiday">Feriado</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Quanto tempo você esperou para entrar?</label>
+                        <div class="pill-group">
+                            <button type="button" class="pill-btn" data-wait="none">Sem espera</button>
+                            <button type="button" class="pill-btn" data-wait="10min">Até 10 min</button>
+                            <button type="button" class="pill-btn" data-wait="30min">De 10 a 30 min</button>
+                            <button type="button" class="pill-btn" data-wait="60min">De 30 a 60 min</button>
+                            <button type="button" class="pill-btn" data-wait="60plus">Uma hora ou mais</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Você recomenda a compra de ingressos com antecedência?</label>
+                        <div class="pill-group">
+                            <button type="button" class="pill-btn" data-recommend="yes">Sim</button>
+                            <button type="button" class="pill-btn" data-recommend="no">Não</button>
+                            <button type="button" class="pill-btn" data-recommend="maybe">Não sei</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-footer">
+                    <button type="button" class="btn btn-cancel" onclick="goBack()">Cancelar</button>
+                    <button type="submit" class="btn btn-submit" id="submitBtn" disabled>Postar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 3: Positive - Redirect to Google -->
+        <div class="step" id="step3Positive">
+            <div class="success-container">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                </div>
+                <h2 class="success-title">Que ótimo! 🎉</h2>
+                <p class="success-subtitle">
+                    Ficamos muito felizes com sua avaliação positiva!<br>
+                    Você poderia compartilhar sua experiência no Google?<br>
+                    Isso nos ajuda muito!
+                </p>
+                <a href="#" id="googleReviewLink" class="google-review-btn" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    Avaliar no Google
+                </a>
+                <button class="skip-btn" onclick="skipReview()">Agora não, obrigado</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: Thank You -->
+        <div class="step" id="step4Thanks">
+            <div class="success-container">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="white">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                </div>
+                <h2 class="success-title">Muito obrigado!</h2>
+                <p class="success-subtitle">
+                    Seu feedback foi recebido com sucesso.<br>
+                    Vamos analisar suas sugestões e trabalhar para melhorar ainda mais!
+                </p>
+                <button class="btn btn-submit" onclick="resetForm()">Fazer nova avaliação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backend Google Sheets -->
+    <!-- Nenhum script externo necessário, usamos Fetch API nativa -->
+
+    <script src="analytics.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
