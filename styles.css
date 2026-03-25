@@ -90,7 +90,7 @@ body {
     border-radius: 50px;
     /* Fully rounded */
     border: 1px solid rgba(255, 255, 255, 0.3);
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     /* Medium bold for Google Sans look */
     color: white;
@@ -310,7 +310,7 @@ body {
 
     #step1 .review-header .business-name {
         padding: 10px 20px;
-        font-size: 13px;
+        font-size: 16px;
         line-height: 1.4;
     }
 
@@ -710,7 +710,7 @@ body {
 
     #step1 .review-header .business-name {
         padding: 10px 24px;
-        font-size: 13px;
+        font-size: 16px;
         line-height: 1.4;
         max-width: 90%;
     }
