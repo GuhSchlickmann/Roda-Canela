@@ -4,7 +4,7 @@
 
 const CONFIG = {
     // Nome da sua empresa (Título da página)
-    businessName: 'Parque Mundo a Vapor Canela',
+    businessName: 'Nos conte como está sendo sua experiência!',
     // URL do seu Google Apps Script (Novo Backend Gratuito)
     backendUrl: 'https://script.google.com/macros/s/AKfycbxLvpHpyikDhDnuOe6Lbb77Ci1E43zKkaINEPPLArJYH_1qxfd7XYhtlGe0wKpinVU1EA/exec',
 
