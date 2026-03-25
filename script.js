@@ -4,7 +4,7 @@
 
 const CONFIG = {
     // Nome da sua empresa (Título da página)
-    businessName: 'Roda Canela',
+    businessName: 'Parque Mundo a Vapor Canela',
     // URL do seu Google Apps Script (Novo Backend Gratuito)
     backendUrl: 'https://script.google.com/macros/s/AKfycbxLvpHpyikDhDnuOe6Lbb77Ci1E43zKkaINEPPLArJYH_1qxfd7XYhtlGe0wKpinVU1EA/exec',
 
@@ -150,7 +150,7 @@ function initSplitListeners() {
             header.classList.add('header-right');
             bizNameText.style.opacity = '0';
             setTimeout(() => {
-                bizNameText.textContent = "Clique sobre o ícone, e nos conte como está sendo sua experiência na Roda Canela!";
+                bizNameText.textContent = "Clique sobre o ícone, e nos conte como está sendo sua experiência no Parque Mundo a Vapor Canela!";
                 bizNameText.style.opacity = '1';
             }, 300);
         });
