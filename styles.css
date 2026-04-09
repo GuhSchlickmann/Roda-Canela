@@ -90,15 +90,15 @@ body {
     border-radius: 50px;
     /* Fully rounded */
     border: 1px solid rgba(255, 255, 255, 0.3);
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 56px;
+    font-weight: 800;
     /* Medium bold for Google Sans look */
     color: white;
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     letter-spacing: 0.2px;
     transition: all 0.8s ease-in-out;
-    max-width: 85%;
+    max-width: 95%;
     font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
 }
 
@@ -363,8 +363,8 @@ body {
 }
 
 .business-name {
-    font-size: 22px;
-    font-weight: 400;
+    font-size: 56px;
+    font-weight: 800;
     color: var(--google-text);
     margin-bottom: 16px;
     text-align: center;
@@ -434,10 +434,10 @@ body {
 }
 
 .form-label {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 36px;
+    font-weight: 800;
     color: var(--google-text);
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     display: block;
 }
 
@@ -450,7 +450,7 @@ body {
     padding: 12px;
     color: var(--google-text);
     font-family: inherit;
-    font-size: 14px;
+    font-size: 26px;
     resize: vertical;
     transition: border-color 0.2s;
 }
@@ -477,7 +477,7 @@ body {
     border-radius: 16px;
     padding: 8px 16px;
     color: var(--google-text);
-    font-size: 14px;
+    font-size: 26px;
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
@@ -501,7 +501,7 @@ body {
     border-radius: 4px;
     padding: 12px;
     color: var(--google-blue);
-    font-size: 14px;
+    font-size: 26px;
     font-weight: 500;
     cursor: pointer;
     display: flex;
@@ -587,8 +587,8 @@ body {
 .btn {
     padding: 10px 24px;
     border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 32px;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
     border: none;
@@ -651,14 +651,14 @@ body {
 }
 
 .success-title {
-    font-size: 24px;
-    font-weight: 400;
+    font-size: 60px;
+    font-weight: 800;
     margin-bottom: 12px;
     color: var(--google-text);
 }
 
 .success-subtitle {
-    font-size: 14px;
+    font-size: 30px;
     color: var(--google-text-secondary);
     margin-bottom: 24px;
     line-height: 1.5;
@@ -673,8 +673,8 @@ body {
     padding: 12px 24px;
     border-radius: 4px;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: 800;
+    font-size: 34px;
     transition: background 0.2s;
     margin-bottom: 12px;
 }
@@ -690,7 +690,7 @@ body {
     border: none;
     padding: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 22px;
     margin: 0 auto;
 }
 
@@ -710,9 +710,9 @@ body {
 
     #step1 .review-header .business-name {
         padding: 10px 24px;
-        font-size: 16px;
-        line-height: 1.4;
-        max-width: 90%;
+        font-size: 44px;
+        line-height: 1.1;
+        max-width: 95%;
     }
 
     .icon-wrapper {
@@ -750,8 +750,8 @@ body {
     }
 
     .form-label {
-        font-size: 14px;
-        margin-bottom: 10px;
+        font-size: 30px;
+        margin-bottom: 15px;
     }
 }
 
