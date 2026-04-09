@@ -54,13 +54,13 @@ body {
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-bottom: 60px;
     -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
 }
 
-/* Force Step 1 to be fixed without scroll */
+/* Force Step 1 to be fixed without scroll or padding */
 #step1 {
     overflow-y: hidden;
+    padding-bottom: 0;
 }
 
 .step.active {
@@ -432,6 +432,7 @@ body {
 /* Content */
 .review-content {
     padding: 24px;
+    padding-bottom: 150px; /* Space for the bottom logo/buttons when scrolling */
 }
 
 /* Legacy estrellas removed for clean code */
