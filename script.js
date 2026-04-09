@@ -9,7 +9,7 @@ const CONFIG = {
     backendUrl: 'https://script.google.com/macros/s/AKfycbxLvpHpyikDhDnuOe6Lbb77Ci1E43zKkaINEPPLArJYH_1qxfd7XYhtlGe0wKpinVU1EA/exec',
 
     // URL da sua página de avaliação do Google (Exata fornecida pelo usuário)
-    googleReviewURL: 'https://www.google.com/search?sca_esv=31e89fb06c6c6e55&hl=pt-BR&sxsrf=ANbL-n41wnZ8F0eXbv7TEXG-1LNoukpFZg:1771593417621&si=AL3DRZHrmvnFAVQPOO2Bzhf8AX9KZZ6raUI_dT7DG_z0kV2_x-crY-QAYBC789cwbq-5JimcWlmPZH3s07h1Lb-ez7lii76NPz-9-tw9WWcED7PozfFK5Jwg4FaiQrQOUccod_wxZmsEImTEp7BJwUHbEEizzBWc6Q%3D%3D&q=Parque+Mundo+a+Vapor+Coment%C3%A1rios&sa=X&ved=2ahUKEwiAzt_ik-iSAxW_s5UCHa9kOfYQ0bkNegQIKhAH&biw=1920&bih=945&dpr=1#',
+    googleReviewURL: 'https://www.google.com/search?sca_esv=31e89fb06c6c6e55&hl=pt-BR&sxsrf=ANbL-n41wnZ8F0eXbv7TEXG-1LNoukpFZg:1771593417621&si=AL3DRZHrmvnFAVQPOO2Bzhf8AX9KZZ6raUI_dT7DG_z0kV2_x-crY-QAYBC789cwbq-5JimcWlmPZH3s07h1Lb-ez7lii76NPz-9-tw9WWcED7PozfFK5Jwg4FaiQrQOUccod_wxZmsEImTEp7BJwUHbEEizzBWc6Q%3D%3D&q=Parque+Mundo+a+Vapor+Coment%C3%A1rios&sa=X&ved=2ahUKEwiAzt_ik-iSAxW_s5UCHa9kOfYQ0bkNegQIKhAH&biw=1920&bih=945&dpr=1#lrd=0x951912a20e362141:0x4d516244199c016c,3,,,,',
 
     // Textos personalizados para cada avaliação
     ratingTexts: {
@@ -65,8 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('🔗 Clique no link do Google Review');
             trackEvent('click_google_review', { rating: selectedRating });
 
-            // Abrimos o link direto configurado
-            const finalURL = CONFIG.googleReviewURL;
+            // Construir URL com a quantidade de estrelas
+            let finalURL = CONFIG.googleReviewURL;
+            if (selectedRating) {
+                finalURL = finalURL.replace(',3,,,,', `,${selectedRating},,,,`);
+            }
 
             console.log('🚀 Redirecionando para:', finalURL);
             window.open(finalURL, '_blank');
@@ -177,7 +180,10 @@ function initSplitListeners() {
             trackEvent('select_experience_start', { type: 'positive' });
 
             const redirectToGoogle = () => {
-                const finalURL = CONFIG.googleReviewURL;
+                let finalURL = CONFIG.googleReviewURL;
+                if (selectedRating) {
+                    finalURL = finalURL.replace(',3,,,,', `,${selectedRating},,,,`);
+                }
 
                 console.log('🚀 Redirecionando DIRETAMENTE para:', finalURL);
                 trackEvent('redirect_google_direct', { rating: selectedRating });
